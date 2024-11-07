@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Ввод номера телефона</title>
+    <!-- Подключаем библиотеку для валидации -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.0/jquery.validate.min.js"></script>
+    <script src="https://www.npmjs.com/package/@losant/html5-qrcode"></script>
+    <!-- Стили и скрипты -->
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        form {
+            max-width: 300px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            background-color: #f9f9f9;
+            box-shadow: 0 0 10px rgba(0,0,0,.1);
+            border-radius: 5px;
+        }
+        input[type=submit], button {
+            display: block;
+            width: 100%;
+            padding: 8px;
+            cursor: pointer;
+            color: white;
+            text-align: center;
+            font-weight: bold;
+            transition: all .2s ease-in-out;
+            outline: none;
+            user-select: none;
+            -webkit-user-select: none;
+            touch-action: manipulation;
+        }
+        .error {
+            color: red;
+            display: inline-block;
+            vertical-align: middle;
+            line-height: normal;
+            height: auto;
+            min-height: 16px;
+            position: relative;
+            top: -6px;
+            left: 12px;
+            opacity: 0;
+            visibility: hidden;
+            transform: scale(.7);
+            transition: opacity .15s linear, visibility .15s step-end, transform .15s cubic-bezier(.175, .885, .32, 1.275);
+        }
+        label.error {
+            padding-left: 30px;
+            white-space: nowrap;
+        }
+        /* Включение ошибки */
+        input.invalid + span.error {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(-50%);
+        }
+    </style>
+</head>
+<body>
+<h1>Введите номер телефона</h1>
+<form id="phoneForm" method="post" action="verify.php">
+    <label for="phone">Номер телефона:</label><br>
+    <input type="tel" name="phone" id="phone" required pattern="^[0-9]{11}$"><span class="error">* Неверный формат номера телефона.</span><br><br>
+    
+    <button type="submit">Продолжить</button>
+</form>
+<script>
+$(document).ready(function() {
+    $('#phoneForm').validate({
+        rules: {
+            phone: {
+                required: true,
+                minlength: 11,
+                maxlength: 11
+            }
+        },
+        messages: {
+            phone: "* Неверный формат номера телефона."
+        },
+        errorPlacement: function(error, element) {
+            var next = element.next();
+            if (!next.is("span")) {
+                next = $("<span></span>").insertAfter(element);
+            }
+            next.addClass("error");
+            error.appendTo(next);
+        },
+        submitHandler: function(form) {
+            form.submit();
+        }
+    });
+});
+</script>
+</body>
+</html>
